@@ -17,63 +17,48 @@ const sql = postgres({
 
 
 const usuarios = async () => {
-    try {
-        const resposta = await sql`SELECT * FROM usuarios`;
-        return resposta;
-    } catch (error) {
-        return error;
-    }
+
+    const resposta = await sql`SELECT nome_de_usuario as nome, email FROM usuarios`;
+    return resposta;
+
+};
+
+const buscarPorId = async (id) => {
+    const resposta = await sql`SELECT * FROM usuarios WHERE id = ${id}`;
+    return resposta[0];
+
 };
 
 const novoUsuario = async (usuario) => {
     await sql`INSERT INTO usuarios (nome_de_usuario, email, senha)
                VALUES (${usuario.nome}, ${usuario.email}, ${usuario.senha})`;
-
-    console.log('Usuário inserido com sucesso.');
-
 };
-const buscarPorId = async (id) => {
-    try {
-        const resposta = await sql`SELECT * FROM usuarios WHERE id = ${id}`;
-        return resposta[0];
-    } catch (error) {
-        return null;
-    }
-};
+
 
 const buscarPorEmail = async (email) => {
-    try {
-        const resposta = await sql`SELECT * FROM usuarios WHERE email = ${email}`;
-        return resposta[0];
-    } catch (error) {
-        return null;
-    }
+
+    const resposta = await sql`SELECT * FROM usuarios WHERE email = ${email}`;
+    return resposta[0];
+
 };
+
 const buscarPorToken = async (token) => {
-    try {
-        const resposta = await sql`SELECT * FROM usuarios WHERE token = ${token}`;
-        return resposta[0];
-    } catch (error) {
-        return null;
-    }
+    const resposta = await sql`SELECT * FROM usuarios WHERE token = ${token}`;
+    return resposta[0];
 };
+
 const atualizarToken = async (id, token, expiracaoToken) => {
-    try {
-        await sql`UPDATE usuarios
+
+    await sql`UPDATE usuarios
             SET token = ${token}, expiracao_token = ${expiracaoToken}
             WHERE id = ${id}`;
-        return "Token atualizado com sucesso";
-    } catch (error) {
-        return null;
-    }
+
 };
+
 const buscarLinkId = async (id) => {
-    try {
-        const resposta = await sql`SELECT * FROM links WHERE usuario_id = ${id}`;
-        return resposta;
-    } catch (error) {
-        return null;
-    }
+
+    const resposta = await sql`SELECT * FROM links WHERE usuario_id = ${id}`;
+    return resposta;
 };
 
 
@@ -93,6 +78,7 @@ const deletarLink = async (id_link) => {
 
 };
 module.exports = {
+    sql,
     usuarios,
     novoUsuario,
     buscarPorId,

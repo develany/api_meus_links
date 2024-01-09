@@ -6,18 +6,24 @@ const auth = require("../middlewares/auth");
 const buscar = async (req, res) => {
     try {
         const resposta = await usuarioService.buscar()
+
         res.send(resposta);
     } catch (error) {
-        res.status(500).send({ error: error.message });
+        res.status(404).json({ mensagem: 'erro ao buscar os usuários' });
     }
 };
 const buscarPeloId = async (req, res) => {
     try {
         const { id } = req.params
         const resposta = await usuarioService.buscarId(id)
+
+        if (!resposta) {
+            res.status(404).json({ mensagem: 'usuário não encontrado' });
+        }
         res.send(resposta);
+
     } catch (error) {
-        res.status(500).send({ error: error.message });
+        res.status(404).json({ mensagem: 'usuário não encontrado' });
     }
 };
 const criar = async (req, res) => {
@@ -28,7 +34,7 @@ const criar = async (req, res) => {
         await usuarioService.criar(usuario)
         res.status(201).send()
     } catch (error) {
-        res.status(500).send({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
 
 };
@@ -41,7 +47,7 @@ const logar = async (req, res) => {
             const token = auth.generateToken(usuario.email);
             const expiracaoToken = new Date(Date.now() + 86400000);
             await usuarioService.atualizarToken(usuario.id, token, expiracaoToken);
-            res.status(200).send({
+            res.status(200).json({
                 token: token, usuario: {
                     nome: usuario.nome_de_usuario,
                     email: usuario.email,
@@ -49,7 +55,7 @@ const logar = async (req, res) => {
                 }
             });
         } else {
-            res.status(401).send({ message: "Credenciais inválidas" });
+            res.status(401).send({ mensagem: "Credenciais inválidas" });
         }
     } catch (error) {
         res.status(500).send({ error: error.message });
@@ -59,6 +65,9 @@ const buscarLinkPeloId = async (req, res) => {
     try {
         const { id } = req.params
         const resposta = await usuarioService.buscarLinkId(id)
+        if (!resposta) {
+            res.status(404).json({ mensagem: 'usuário não encontrado' });
+        }
         res.send(resposta);
     } catch (error) {
         res.status(500).send({ error: error.message });

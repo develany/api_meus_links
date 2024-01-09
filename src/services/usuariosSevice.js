@@ -9,18 +9,13 @@ const buscar = async () => {
 };
 const buscarId = async (id) => {
     const usuario = await usuarioRepository.buscarPorId(id);
-
-    if (usuario) {
-
-        return usuario;
-    }
-
-    return null;
+    return usuario;
 };
 
 const criar = async (usuario) => {
     await usuarioRepository.novoUsuario(usuario);
 };
+
 const logar = async (email, senha) => {
     const usuario = await usuarioRepository.buscarPorEmail(email);
 
@@ -32,8 +27,8 @@ const logar = async (email, senha) => {
         }
     }
 
-    return null;
 };
+
 const atualizarToken = async (id, token, expiracaoToken) => {
     const usuario = await usuarioRepository.atualizarToken(id, token, expiracaoToken);
 
