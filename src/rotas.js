@@ -18,9 +18,11 @@ rotas.post('/usuarios', validateUserBody(schemaUser), emailExist, usuarioControl
 rotas.post('/usuarios/login', validateUserBody(schemaLogin), usuarioController.logar)
 
 rotas.get('/usuarios/:id/links', usuarioController.buscarLinkPeloId)
-rotas.post('/links/:id', auth.verifyToken, validateUserBody(schemaLink), usuarioController.criarLink)
-rotas.put('/links/:id_link', auth.verifyToken, usuarioController.atualizarLink)
-rotas.delete('/links/:id_link', auth.verifyToken, usuarioController.deletarLink)
+
+rotas.use(auth.verifyToken)
+rotas.post('/links/:id', validateUserBody(schemaLink), usuarioController.criarLink)
+rotas.put('/links/:id_link', usuarioController.atualizarLink)
+rotas.delete('/links/:id_link', usuarioController.deletarLink)
 
 
 

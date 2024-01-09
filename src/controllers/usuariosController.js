@@ -74,10 +74,9 @@ const buscarLinkPeloId = async (req, res) => {
     }
 };
 const criarLink = async (req, res) => {
-
+    const link = req.body
+    const { id } = req.params
     try {
-        const link = req.body
-        const { id } = req.params
         await usuarioService.criarLink(link, id)
         res.status(201).send()
     } catch (error) {
